@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://cce6tq8yd7lhm"]
+
+[ext_resource type="PackedScene" uid="uid://bmqex5nuk8eoa" path="res://esenas/character_body_2d.tscn" id="1_2k64u"]
+[ext_resource type="Texture2D" uid="uid://b4hea4vbrnnau" path="res://assets/mapa/MapalaBerinto.webp" id="3_c4fk3"]
+[ext_resource type="Texture2D" uid="uid://ctdhk25y824k3" path="res://assets/mapa/librero1.png" id="3_krhd5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_krhd5"]
+size = Vector2(138, 284.75)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c4fk3"]
+size = Vector2(146, 164)
+
+[node name="mapa" type="Node2D"]
+y_sort_enabled = true
+
+[node name="CharacterBody2D" parent="." instance=ExtResource("1_2k64u")]
+position = Vector2(500, 243)
+
+[node name="Librero1" type="Sprite2D" parent="."]
+z_index = 1
+position = Vector2(380, 314)
+texture = ExtResource("3_krhd5")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Librero1"]
+z_index = 1
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(478, 394.375)
+shape = SubResource("RectangleShape2D_krhd5")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(540, 380)
+shape = SubResource("RectangleShape2D_c4fk3")
+
+[node name="MapalaBerinto" type="Sprite2D" parent="."]
+z_index = -3
+position = Vector2(243, 35.5004)
+scale = Vector2(1.54491, 1.60671)
+texture = ExtResource("3_c4fk3")
