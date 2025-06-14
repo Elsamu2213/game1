@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://cce6tq8yd7lhm"]
+
+[ext_resource type="PackedScene" uid="uid://bmqex5nuk8eoa" path="res://esenas/animaciones/player1.tscn" id="1_8j6ke"]
+[ext_resource type="Texture2D" uid="uid://b4hea4vbrnnau" path="res://assets/mapa/MapalaBerinto.webp" id="2_jhwk7"]
+[ext_resource type="PackedScene" uid="uid://cfrg8t1dhf2sv" path="res://esenas/animaciones/enemy_2d.tscn" id="3_p53uw"]
+
+[node name="mapa" type="Node2D"]
+y_sort_enabled = true
+
+[node name="CharacterBody2D" parent="." instance=ExtResource("1_8j6ke")]
+position = Vector2(457, 271)
+
+[node name="MapalaBerinto" type="Sprite2D" parent="."]
+z_index = -3
+position = Vector2(243, 35.5004)
+scale = Vector2(1.54491, 1.60671)
+texture = ExtResource("2_jhwk7")
+metadata/_edit_lock_ = true
+
+[node name="enemy1" parent="." instance=ExtResource("3_p53uw")]
