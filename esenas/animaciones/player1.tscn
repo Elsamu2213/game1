@@ -1,8 +1,7 @@
-[gd_scene load_steps=83 format=3 uid="uid://bmqex5nuk8eoa"]
+[gd_scene load_steps=70 format=3 uid="uid://bmqex5nuk8eoa"]
 
 [ext_resource type="Script" uid="uid://cmpusg63qajnu" path="res://esenas/scripts/player1_2d.gd" id="1_0degq"]
 [ext_resource type="Texture2D" uid="uid://d1dobrwp258kp" path="res://assets/waifu/Free/64X128_Idle_Free.png" id="2_gs0oi"]
-[ext_resource type="Texture2D" uid="uid://cvmh71b6c0hp0" path="res://assets/ejemplo/48Free/Male/Male_R.png" id="3_4lxyl"]
 [ext_resource type="Texture2D" uid="uid://bnqk56jcndcjr" path="res://assets/waifu/Free/64X128_Runing_Free.png" id="3_748dy"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gs0oi"]
@@ -70,54 +69,6 @@ region = Rect2(384, 128, 64, 128)
 [sub_resource type="AtlasTexture" id="AtlasTexture_pwd6q"]
 atlas = ExtResource("2_gs0oi")
 region = Rect2(448, 128, 64, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_meivq"]
-atlas = ExtResource("3_4lxyl")
-region = Rect2(0, 0, 48, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lwqct"]
-atlas = ExtResource("3_4lxyl")
-region = Rect2(48, 0, 48, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_mgynr"]
-atlas = ExtResource("3_4lxyl")
-region = Rect2(96, 0, 48, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_y72rv"]
-atlas = ExtResource("3_4lxyl")
-region = Rect2(144, 0, 48, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_rd48p"]
-atlas = ExtResource("3_4lxyl")
-region = Rect2(192, 0, 48, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_a8ukq"]
-atlas = ExtResource("3_4lxyl")
-region = Rect2(240, 0, 48, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1gq71"]
-atlas = ExtResource("3_4lxyl")
-region = Rect2(288, 0, 48, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2xq1q"]
-atlas = ExtResource("3_4lxyl")
-region = Rect2(336, 0, 48, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_k6a6f"]
-atlas = ExtResource("3_4lxyl")
-region = Rect2(384, 0, 48, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3462w"]
-atlas = ExtResource("3_4lxyl")
-region = Rect2(432, 0, 48, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_m1pfn"]
-atlas = ExtResource("3_4lxyl")
-region = Rect2(480, 0, 48, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_sjo74"]
-atlas = ExtResource("3_4lxyl")
-region = Rect2(528, 0, 48, 96)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_v6oaw"]
 atlas = ExtResource("2_gs0oi")
@@ -373,47 +324,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_meivq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_lwqct")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mgynr")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_y72rv")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rd48p")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_a8ukq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1gq71")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_2xq1q")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_k6a6f")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3462w")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_m1pfn")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_sjo74")
-}],
-"loop": true,
-"name": &"parpadeo_danado",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_v6oaw")
 }, {
 "duration": 1.0,
@@ -600,13 +510,14 @@ texture_filter = 1
 position = Vector2(0, -31)
 scale = Vector2(0.86192, 0.810777)
 sprite_frames = SubResource("SpriteFrames_y1dt5")
-animation = &"parpadeo_danado"
-frame = 8
-frame_progress = 0.844057
+animation = &"down"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(-1, -39)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-
 [node name="TimerInvulnerabilidad" type="Timer" parent="."]
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(0, -32)
+target_position = Vector2(82, 0)
+collision_mask = 2

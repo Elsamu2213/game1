@@ -1,5 +1,13 @@
 extends CharacterBody2D
-enum Estado { IDLE, ALERTA, PERSEGUIR, ATAQUE, DANADO, MUERTO }
+enum Estado {
+	IDLE,        # En reposo/inactivo
+	ALERTA,      # Jugador detectado
+	PERSEGUIR,   # Persiguiendo al jugador
+	ATAQUE,      # Atacando
+	DANADO,
+	INVENCIBLE,  # Estado de invulnerabilidad (puede llamarse DANADO si prefieres)
+	MUERTO       # Derrotado
+}
 var estado_actual: Estado = Estado.IDLE
 var updating_animations: bool = false
 @export var dano_base: int = 1  # Daño que aplicará el enemigo
@@ -13,6 +21,10 @@ var updating_animations: bool = false
 
 var puede_cambiar_estado: bool = true
 
+
+
+
+@onready var InvulnerabilidadTimer = $InvulnerabilidadTimer  # Añade un nodo Timer
 
 @export var attack_range: float = 70.0  # Rango óptimo de ataque
 @export var cooldown_ataque: float = 7.5  # Tiempo entre ataques
@@ -33,6 +45,16 @@ var player: CharacterBody2D = null  # Referencia al jugador
 var last_direction: Vector2 = Vector2.DOWN  # Dirección inicial para animaciones idle
 
 func _ready():
+	
+	
+		# Configurar timer
+	if not has_node("InvulnerabilidadTimer"):
+		var timer = Timer.new()
+		timer.name = "InvulnerabilidadTimer"
+		add_child(timer)
+		timer.wait_time = tiempo_invulnerabilidad
+		timer.timeout.connect(_fin_invulnerabilidad)
+		
 	# Configura el radio del área de detección (opcional)
 	var shape = CircleShape2D.new()
 	shape.radius = detection_radius
@@ -239,20 +261,41 @@ func comportamiento_danado():
 	
 	modulate = Color.WHITE  # Restaurar color
 		
-func recibir_dano(cantidad: int):
-	# No recibir daño si ya está en estado vulnerable
+func recibir_dano(cantidad: int, origen: Vector2 = Vector2.ZERO):
 	if estado_actual == Estado.DANADO or estado_actual == Estado.MUERTO:
-		return
+		return false
 	
 	vida -= cantidad
+	#$AnimationPlayer.play("danado")
+	print("recibio Danoooo")
+	modulate = Color.RED
 	
-	# Feedback visual inmediato
-	$HitParticles.emitting = true  # Si tienes partículas
+	# Knockback
+	if origen != Vector2.ZERO:
+		var direccion = (global_position - origen).normalized()
+		velocity = direccion * 250
+	
+	cambiar_estado(Estado.DANADO)
+	await get_tree().create_timer(tiempo_invulnerabilidad).timeout
 	
 	if vida <= 0:
 		cambiar_estado(Estado.MUERTO)
 	else:
-		cambiar_estado(Estado.DANADO)
+		cambiar_estado(Estado.PERSEGUIR)
+	
+	modulate = Color.WHITE
+	return true
+	
+func _fin_invulnerabilidad():
+	if estado_actual == Estado.INVENCIBLE and vida > 0:
+		modulate = Color.WHITE
+		cambiar_estado(Estado.PERSEGUIR)  # O el estado que corresponda
+
+func _on_InvulnerabilidadTimer_timeout():
+	if estado_actual == Estado.INVENCIBLE:
+		modulate = Color.WHITE
+		cambiar_estado(Estado.PERSEGUIR)
+
 
 func cambiar_estado(nuevo_estado: Estado):
 	# 1. Validación de estado inválido o redundante
@@ -274,8 +317,8 @@ func cambiar_estado(nuevo_estado: Estado):
 	
 	# 4. Lógica de entrada al nuevo estado (segura)
 	match nuevo_estado:
-		Estado.ALERTA:
-			play_sound("alert")
+		#Estado.ALERTA:
+			#play_sound("alert")
 		Estado.ATAQUE:
 			start_attack_sequence()
 		Estado.DANADO:
@@ -290,10 +333,10 @@ func safe_stop(node_path: String):
 	if has_node(node_path) and get_node(node_path).has_method("stop"):
 		get_node(node_path).stop()
 
-func play_sound(sound_name: String):
-	var audio_node = "Audio%s" % sound_name.capitalize()
-	if has_node(audio_node):
-		get_node(audio_node).play()
+#func play_sound(sound_name: String):
+	#var audio_node = "Audio%s" % sound_name.capitalize()
+	#if has_node(audio_node):
+		#get_node(audio_node).play()
 
 func start_attack_sequence():
 	puede_cambiar_estado = false

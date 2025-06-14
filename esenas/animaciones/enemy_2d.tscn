@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cupqck03fcpui" path="res://assets/enemy/Vampires1/Hurt/Vampires1_Hurt_full.png" id="4_nxtwy"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yo2o5"]
-radius = 20.0
+radius = 27.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nxtwy"]
 atlas = ExtResource("2_vglc5")
@@ -398,14 +398,14 @@ texture_filter = 1
 position = Vector2(0, -1)
 scale = Vector2(1.73438, 1.73438)
 sprite_frames = SubResource("SpriteFrames_7draq")
-animation = &"ataque"
-frame_progress = 0.184088
+animation = &"danado"
 metadata/_edit_group_ = true
 
 [node name="DetectionArea" type="Area2D" parent="."]
 collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+visible = false
 shape = SubResource("CircleShape2D_u6yrj")
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
@@ -418,3 +418,5 @@ shape = SubResource("CircleShape2D_u6yrj")
 position = Vector2(1, 0)
 shape = SubResource("CapsuleShape2D_kxti1")
 debug_color = Color(0.933333, 0.203922, 0.105882, 0.419608)
+
+[node name="InvulnerabilidadTimer" type="Timer" parent="."]

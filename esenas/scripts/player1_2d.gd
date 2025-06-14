@@ -12,13 +12,22 @@ enum Estado { NORMAL, INVULNERABLE, ATACANDO, MUERTO }
 var last_direction := Vector2.DOWN# Dirección inicial por defecto (abajo)
 
  #1. DECLARACIÓN DE VARIABLES (arriba del todo)
+#variablesde ataque 
+@onready var raycast_ataque = $RayCast2D  # Asegúrate de añadir el nodo RayCast2D a tu escena
+
+@export var rango_ataque: float = 100.0  # Pixeles de alcance
+@export var dano_ataque: int = 1
+@export var cooldown_ataque: float = 0.5
+var puede_atacar: bool = true
 
 
 
-
-
+func _input(event):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		atacar()
 # 2. FUNCIÓN _READY() - Configuración inicial
 func _ready():
+
 	# Inicialización del Timer de invulnerabilidad
 	if not has_node("TimerInvulnerabilidad"):
 		var timer = Timer.new()
@@ -42,6 +51,8 @@ func _on_invulnerabilidad_end():
 
 
 func _physics_process(delta):
+	if Input.is_action_just_pressed("atacar"):
+		atacar()	
 	# 1. Obtener input WASD
 	var direction := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	
@@ -136,11 +147,47 @@ func morir():
 	get_tree().reload_current_scene()  # O tu lógica de game over
 	
 	
+
+
 func atacar():
-	if estado_actual != Estado.NORMAL:
+	print("atacandoooo")
+	if not puede_atacar:
 		return
 	
-	estado_actual = Estado.ATACANDO
-	$AnimationPlayer.play("ataque")
-	await $AnimationPlayer.animation_finished
-	estado_actual = Estado.NORMAL
+	# Obtener dirección del mouse (coordenadas globales a locales)
+	var mouse_pos = get_global_mouse_position()
+	var direccion_ataque = (mouse_pos - global_position).normalized()
+	
+	# Aplicar configuración al RayCast
+	raycast_ataque.target_position = direccion_ataque * rango_ataque
+	raycast_ataque.force_raycast_update()  # Actualizar detección inmediatamente
+	
+	# Animación basada en dirección (opcional)
+	var angulo = rad_to_deg(direccion_ataque.angle())
+	var anim_direccion = ""
+	
+	# Determinar animación según ángulo (ajusta según tus necesidades)
+	if abs(angulo) <= 45:
+		anim_direccion = "derecha"
+	elif abs(angulo) >= 135:
+		anim_direccion = "izquierda"
+	elif angulo > 45 and angulo < 135:
+		anim_direccion = "abajo"
+	else:
+		anim_direccion = "arriba"
+	
+	# Animación y sonido (descomenta cuando tengas los recursos)
+	#$AnimatedSprite2D.play("ataque_" + anim_direccion)
+	#$AudioAtaque.play()
+	print("atacando hacia: ", anim_direccion)
+	
+	# Lógica de daño
+	if raycast_ataque.is_colliding():
+		var objetivo = raycast_ataque.get_collider()
+		if objetivo.has_method("recibir_dano"):
+			objetivo.recibir_dano(dano_ataque, global_position)
+	
+	# Cooldown
+	puede_atacar = false
+	await get_tree().create_timer(cooldown_ataque).timeout
+	puede_atacar = true
